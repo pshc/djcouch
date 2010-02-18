@@ -1,6 +1,8 @@
 Installation:
     Add 'djcouch' to INSTALLED_APPS.
-    Set settings.SITE_PREFIX to a preferred database name.
+    Set settings.COUCHDB_HOST to the URL for your CouchDB server.
+    Set settings.COUCHDB_DATABASES to a list of database names to use.
+    Set settings.COUCHDB_DEFAULT_DATABASE to a preferred database name.
     Whenever you change your CouchDB view functions, run ./manage.py syncdb.
 
 Usage example:
@@ -14,7 +16,7 @@ def foo_index(request):
         emit(doc.slug, null);
     }
     """
-    slugs = djcouch.view('foo_index.all_foo_slugs', descending=False)
+    slugs = djcouch.view('all_foo_slugs', descending=False)
     return render_to_response('foo_index.html', locals())
 
 def foo_detail(request, slug):
