@@ -21,10 +21,6 @@ if not isinstance(DATABASE_NAMES, (list, tuple)):
     raise CouchDBImproperlyConfigured("COUCHDB_DATABASES must be a list "
             "of database names.")
 
-DEFAULT_DATABASE = getattr(settings, 'COUCHDB_DEFAULT_DATABASE', None)
-
-DESIGN_DOC_SUFFIX = getattr(settings, 'COUCHDB_DESIGN_DOC_SUFFIX', '-design')
-
 if not hasattr(settings, 'couchdb_server'):
     settings.couchdb_server = couchdb.client.Server(HOST)
 server = settings.couchdb_server
@@ -40,6 +36,13 @@ if not hasattr(settings, 'couchdb_dbs'):
             _db = server[_name]
         settings.couchdb_dbs[_name] = _db
 dbs = settings.couchdb_dbs
+
+DEFAULT_DATABASE = getattr(settings, 'COUCHDB_DEFAULT_DATABASE', None)
+
+if DEFAULT_DATABASE:
+    db = dbs[DEFAULT_DATABASE]
+
+DESIGN_DOC_SUFFIX = getattr(settings, 'COUCHDB_DESIGN_DOC_SUFFIX', '-design')
 
 def view(view_name, db=None, empty_ok=True, **kwargs):
     """Wraps db.view(...) with convenience functionality.
